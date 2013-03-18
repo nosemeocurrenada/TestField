@@ -143,19 +143,7 @@ if __name__ == '__main__':
     black = 0, 0, 0
 
     screen = pygame.display.set_mode(size)
-
-    pelota = Pelota(pygame.image.load("resources/images/ball.png"), (90,90), size, [1,1])
-    pepe = PersonaBoluda(pygame.image.load("resources/images/pepe.bmp"), (250,180))
-    carlos = PersonaSumisa(pygame.image.load("resources/images/carlos.png"), (150,180))
-    jacinto = PersonaBoludaLenta( pygame.image.load("resources/images/jacinto.bmp"), (70,120))
-    juan = PersonaBoludaRapida(pygame.image.load("resources/images/juan.bmp"), (50,80))
-    habitacion = Room(size)
-    habitacion.entitiesList.append(jacinto)    
-    habitacion.entitiesList.append(pelota)
-    habitacion.entitiesList.append(pepe)
-    habitacion.entitiesList.append(juan)
-    habitacion.entitiesList.append(carlos)
-    
+ 
     while 1:
         
         for event in pygame.event.get():
