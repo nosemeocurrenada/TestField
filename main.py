@@ -57,7 +57,18 @@ class PersonaBoluda(Entity):
     def draw(self, screen):
         screen.blit(self.image,self.rect)
         
-
+class PersonaBoludaLenta(Entity):
+    def __init__(self, image, pos):
+        """inicializa a la entidad con una imagen y una posision"""
+        Entity.__init__(self, image, pos)
+        
+    def update(self):
+        rnd = random.Random()
+        rnd.seed()
+        self.rect = self.rect.move(rnd.randint(-1, 1),rnd.randint(-1,1))
+    
+    def draw(self, screen):
+        screen.blit(self.image,self.rect)
 
 class PersonaSumisa(Entity):
     def __init__(self, image, pos):
@@ -119,11 +130,12 @@ if __name__ == '__main__':
     pelota = Pelota(pygame.image.load("resources/images/ball.bmp"), (20,20), size, [1,1])
     pepe = PersonaBoluda(pygame.image.load("resources/images/pepe.bmp"), (250,180))
     carlos = PersonaSumisa(pygame.image.load("resources/images/carlos.bmp"), (150,180))
+    jacinto = PersonaBoludaLenta( pygame.image.load("resources/images/jacinto.bmp"), (70,120))
     habitacion = Room(size)
+    habitacion.entitiesList.append(jacinto)    
     habitacion.entitiesList.append(pelota)
-    habitacion.entitiesList.append(pepe)
     habitacion.entitiesList.append(carlos)
-    
+    habitacion.entitiesList.append(pepe)
     
     while 1:
         
