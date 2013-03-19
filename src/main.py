@@ -134,15 +134,6 @@ class entidadViajera():
 import pygame
 
 if __name__ == '__main__':
-    #------------------------------------------------- carlos = entidadViajera()
-    #--------------------------------------------- carlos.passport.append((0,1))
-    #----------------------------------------------------- print carlos.passport
-    #--------------------------------------------- carlos.passport.append((0,0))
-    #----------------------------------------------------- print carlos.passport
-    #------------------------- carlos.passport.extend([(0,0),(1,1),(0,1),(1,1)])
-    #----------------------------------------------------- print carlos.passport
-    #-------------------------- print "popeado: " + str(carlos.passport.pop(-1))
-    #----------------------------------------------------- print carlos.passport
     regMOM = Region(None)
     
     regA = Region(None)
