@@ -56,6 +56,17 @@ class Region():
     mother = None    
     daugther = [[],[]]    
     waiting = []
+    
+    def draw(self, indent):
+        space = ""
+        for i in range(0,indent):
+            space = space + "        "
+        for i in range(0,2):
+            for j in range(0,2):
+                print space + "reg " + str((i,j)) + ":"
+                if hasattr(self.daugther[i][j],"draw"):
+                    self.daugther[i][j].draw(indent+1)
+
 
     def update(self, lista):
         """llama a actualizar de las regiones hijas pasandole las entidades de la lista, mas las entidades que ya tenia.
@@ -67,30 +78,28 @@ class Region():
                     gift = []
                     for ent in self.waiting:
                         if ent.passport[-1] == (i,j):
+                            #ent.passport.pop(-1)
                             gift.append(self.waiting.pop(-1))
                     ret = self.daugther[i][j].update(gift)
                     for e in ret:
                         e.passport.append((i,j))
                     self.waiting.extend(ret)
                     
-        gift = []
         toremove = []
         
         for ent in self.waiting:
             
-            entdest = tsum(ent.passport[-1],ent.direction)
+            entdest = tsum(ent.passport[-1],ent.direction)          
             
             ent.passport[-1] = entdest[0] % 2 , entdest[1] % 2  
             
             if entdest[0] >= 2 or entdest[0] < 0 or entdest[1] >= 2 or entdest[1] < 0:
-                gift.append(ent)
                 toremove.append(ent)
-        
         
         for ent in toremove:
             self.waiting.remove(ent)
         
-        return gift
+        return toremove
             
 class RegionMin():
     def __init__(self, name, mother):
@@ -98,10 +107,14 @@ class RegionMin():
         self.mother = mother
         self.name = name
         self.content = []
-
+        
+    def draw(self, indent):
+        space = ""
+        for i in range(0,indent):
+            space = space + "        "
+        print space + self.name + " : " + "-".join([ent.name for ent in self.content])
     
     def update(self, lista):
-        print self.name + " : " + "-".join([ent.name for ent in self.content])
         for ent in lista:
             ent.direction = (0,0)
         self.content.extend(lista)
@@ -138,37 +151,37 @@ if __name__ == '__main__':
     
     regA = Region(None)
     regA00 = RegionMin("regA00",regA)
-    regA01 = RegionMin("regA01",regA)
     regA10 = RegionMin("regA10",regA)
+    regA01 = RegionMin("regA01",regA)
     regA11 = RegionMin("regA11",regA)
-    regA.daugther = [[regA00,regA10],[regA01,regA11]]
+    regA.daugther = [[regA00,regA01],[regA10,regA11]]
     
     regB = Region(None)
     regB00 = RegionMin("regB00",regB)
-    regB01 = RegionMin("regB01",regB)
     regB10 = RegionMin("regB10",regB)
+    regB01 = RegionMin("regB01",regB)
     regB11 = RegionMin("regB11",regB)
-    regB.daugther = [[regB00,regB10],[regB01,regB11]]
+    regB.daugther = [[regB00,regB01],[regB10,regB11]]
     
     regC = Region(None)
     regC00 = RegionMin("regC00",regC)
-    regC01 = RegionMin("regC01",regC)
     regC10 = RegionMin("regC10",regC)
+    regC01 = RegionMin("regC01",regC)
     regC11 = RegionMin("regC11",regC)
-    regC.daugther = [[regC00,regC10],[regC01,regC11]]
+    regC.daugther = [[regC00,regC01],[regC10,regC11]]
     
     regD = Region(None)
     regD00 = RegionMin("regD00",regD)
-    regD01 = RegionMin("regD01",regD)
     regD10 = RegionMin("regD10",regD)
+    regD01 = RegionMin("regD01",regD)
     regD11 = RegionMin("regD11",regD)
-    regD.daugther = [[regD00,regD10],[regD01,regD11]]
+    regD.daugther = [[regD00,regD01],[regD10,regD11]]
     
     regMOM.daugther = [[regA,regB],[regC,regD]]
     
     
     carlos = entidadViajera("Carlos",8)    
-    regA01.content.append(carlos)    
+    regB01.content.append(carlos)    
     
     pygame.init()
     
@@ -180,22 +193,26 @@ if __name__ == '__main__':
         for event in pygame.event.get():
             if event.type == pygame.QUIT: 
                 doExit = True
-            if event.type == pygame.K_d:
+                
+            teclas = pygame.key.get_pressed()
+            
+            if teclas[pygame.K_d]:
                 carlos.direction = (0,1)
-            if event.type == pygame.K_w:
-                carlos.direction = (-1,)
-            if event.type == pygame.K_a:
+            if teclas[pygame.K_w]:
+                carlos.direction = (-1,0)
+            if teclas[pygame.K_a]:
                 carlos.direction = (0,-1)
-            if event.type == pygame.K_s:
+            if teclas[pygame.K_s]:
                 carlos.direction = (1,0)
-            if event.type == pygame.K_SPACE:
+            if teclas[pygame.K_SPACE]:
                 carlos.direction = (0,0)
     
-        print "-".join([ent.name for ent in regMOM.update([])])
+        print "-".join([ent.name for ent in regMOM.update([])])        
+        regMOM.draw(0)
         
-        pygame.time.delay(100)
+        pygame.time.delay(500)
         
-        screen.fill((0,0,0))
+        screen.fill((255,255,255))
         pygame.display.flip()
     
     
