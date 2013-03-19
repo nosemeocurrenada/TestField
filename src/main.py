@@ -52,15 +52,13 @@ class Region():
     def __init__(self, mother):
         """ inicializa una region con su region madre"""
         self.mother = mother
-        
-    mother = None    
-    daugther = [[],[]]    
-    waiting = []
+        self.daugther = [[],[]]
+        self.waiting = []
     
     def draw(self, indent):
         space = ""
         for i in range(0,indent):
-            space = space + "        "
+            space = space + "           "
         for i in range(0,2):
             for j in range(0,2):
                 print space + "reg " + str((i,j)) + ":"
@@ -72,13 +70,15 @@ class Region():
         """llama a actualizar de las regiones hijas pasandole las entidades de la lista, mas las entidades que ya tenia.
         Devuelve una lista con las entidades que retornaron las hijas que deben moverse afuera de esta region. 
         Las que se pueden mover dentro de esta region, quedan almacenadas en waiting hasta al proximo update"""
+        
+        self.waiting.extend(lista)
         for i in range(0,2):
             for j in range(0,2):
                 if hasattr(self.daugther[i][j],"update"):
                     gift = []
                     for ent in self.waiting:
                         if ent.passport[-1] == (i,j):
-                            #ent.passport.pop(-1)
+                            ent.passport.pop(-1)
                             gift.append(self.waiting.pop(-1))
                     ret = self.daugther[i][j].update(gift)
                     for e in ret:
@@ -88,13 +88,17 @@ class Region():
         toremove = []
         
         for ent in self.waiting:
-            
-            entdest = tsum(ent.passport[-1],ent.direction)          
-            
-            ent.passport[-1] = entdest[0] % 2 , entdest[1] % 2  
-            
-            if entdest[0] >= 2 or entdest[0] < 0 or entdest[1] >= 2 or entdest[1] < 0:
+            if   ent.passport[-1][0] + ent.direction[0] > 1:
                 toremove.append(ent)
+            elif ent.passport[-1][0] + ent.direction[0] < 0:
+                toremove.append(ent)
+            elif ent.passport[-1][1] + ent.direction[1] > 1:
+                toremove.append(ent)
+            elif ent.passport[-1][1] + ent.direction[1] < 0:
+                toremove.append(ent)
+            
+            ent.passport[-1] = (( ent.passport[-1][0] + ent.direction[0] ) % 2 , ( ent.passport[-1][1] + ent.direction[1] ) % 2 )
+                
         
         for ent in toremove:
             self.waiting.remove(ent)
@@ -111,7 +115,7 @@ class RegionMin():
     def draw(self, indent):
         space = ""
         for i in range(0,indent):
-            space = space + "        "
+            space = space + "           "
         print space + self.name + " : " + "-".join([ent.name for ent in self.content])
     
     def update(self, lista):
@@ -138,11 +142,8 @@ class entidadViajera():
     def __init__(self, name, content):
         self.content = content
         self.name = name
-    name = None
-    passport = []
-    """el pasaporte es una queue de posisiones a las que tiene que ir"""
-    direction = (0,0)
-    content  = None
+        self.passport = []
+        self.direction = (0,0)
     
 import pygame
 
