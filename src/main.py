@@ -78,13 +78,20 @@ class Region():
                     gift = []
                     for ent in self.waiting:
                         if ent.passport[-1] == (i,j):
-                            ent.passport.pop(-1)
+                            ent.backup.append(ent.passport.pop(-1))
                             gift.append(self.waiting.pop(-1))
                     ret = self.daugther[i][j].update(gift)
                     for e in ret:
                         e.passport.append((i,j))
                     self.waiting.extend(ret)
-                    
+                else:
+                    for ent in self.waiting:
+                        if ent.passport[-1] == (i,j):
+                            ent.direction = -ent.direction[0],-ent.direction[1]
+                            
+                            for i in range(0,ent.passport.__len__()-1):
+                                ent.passport[i] = ( ent.passport[i][0] + ent.direction[0] ) % 2 , ( ent.passport[i][1] - ent.direction[1] ) % 2 
+                             
         toremove = []
         
         for ent in self.waiting:
@@ -99,12 +106,18 @@ class Region():
             
             ent.passport[-1] = (( ent.passport[-1][0] + ent.direction[0] ) % 2 , ( ent.passport[-1][1] + ent.direction[1] ) % 2 )
                 
-        
-        for ent in toremove:
-            self.waiting.remove(ent)
+        if self.mother != None:
+            for ent in toremove:
+                self.waiting.remove(ent)
+        else:
+            for ent in toremove:
+                for i in range(0,ent.passport.__len__()):
+                    ent.passport[i] = ( ent.passport[i][0] + ent.direction[0] ) % 2 , ( ent.passport[i][1] - ent.direction[1] ) % 2 
+            toremove = []
         
         return toremove
-            
+    
+    
 class RegionMin():
     def __init__(self, name, mother):
         """ inicializa una region con su region madre"""
@@ -121,6 +134,7 @@ class RegionMin():
     def update(self, lista):
         for ent in lista:
             ent.direction = (0,0)
+            ent.backup = []
         self.content.extend(lista)
         
         toremove = []
@@ -143,6 +157,7 @@ class entidadViajera():
         self.content = content
         self.name = name
         self.passport = []
+        self.backup = []
         self.direction = (0,0)
     
 import pygame
@@ -150,28 +165,28 @@ import pygame
 if __name__ == '__main__':
     regMOM = Region(None)
     
-    regA = Region(None)
+    regA = Region(regMOM)
     regA00 = RegionMin("regA00",regA)
     regA10 = RegionMin("regA10",regA)
     regA01 = RegionMin("regA01",regA)
     regA11 = RegionMin("regA11",regA)
     regA.daugther = [[regA00,regA01],[regA10,regA11]]
     
-    regB = Region(None)
+    regB = Region(regMOM)
     regB00 = RegionMin("regB00",regB)
     regB10 = RegionMin("regB10",regB)
     regB01 = RegionMin("regB01",regB)
     regB11 = RegionMin("regB11",regB)
     regB.daugther = [[regB00,regB01],[regB10,regB11]]
     
-    regC = Region(None)
+    regC = Region(regMOM)
     regC00 = RegionMin("regC00",regC)
     regC10 = RegionMin("regC10",regC)
     regC01 = RegionMin("regC01",regC)
     regC11 = RegionMin("regC11",regC)
     regC.daugther = [[regC00,regC01],[regC10,regC11]]
     
-    regD = Region(None)
+    regD = Region(regMOM)
     regD00 = RegionMin("regD00",regD)
     regD10 = RegionMin("regD10",regD)
     regD01 = RegionMin("regD01",regD)
