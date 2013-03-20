@@ -1,52 +1,16 @@
 '''
 Created on 17/03/2013
 
-@author: Nikita
+@author: Nikita Zdanovitch
 '''
-import math
+import os
+
+def cls():
+    os.system("clear")
 
 def tsum(a , b):
     return (a[0]+b[0],a[1]+b[1])
 
-
-  
-class Entity():    
-    def __init__(self, image, pos):
-        """inicializa a la entidad con una imagen y una posision"""
-        self.image = image
-        self.rect = self.image.get_rect()
-        self.rect.center = pos
-        
-    def update(self):
-        print "YO (" + str(self) + ") ME UPDATIE"
-    
-    def draw(self, screen):
-        screen.blit(self.image,self.rect)
-        
-    image = None
-    rect = None
-     
-
-class Room():
-    def __init__(self, size):
-        self.size = size
-        
-    size = None
-    entitiesList = []
-    
-    def update(self):
-        for entity in self.entitiesList:
-            if hasattr(entity,"update"):
-                entity.update()
-            
-    def draw(self, screen):
-        screen.fill(( 0, 0, 0))
-        for entity in self.entitiesList:
-            if hasattr(entity,"draw"):
-                entity.draw(screen)
-        pygame.display.flip()
-    
- 
  
 class Region():
     def __init__(self, mother):
@@ -223,32 +187,13 @@ if __name__ == '__main__':
             if teclas[pygame.K_SPACE]:
                 carlos.direction = (0,0)
     
-        print "-".join([ent.name for ent in regMOM.update([])])        
+        print "-".join([ent.name for ent in regMOM.update([])])  
+        cls()
         regMOM.draw(0)
         
         pygame.time.delay(500)
         
         screen.fill((255,255,255))
         pygame.display.flip()
-    
-    
-#    import pygame
-#    pygame.init()
-#    size = width, height = 320, 240
-#    black = 0, 0, 0
-#
-#    screen = pygame.display.set_mode(size)
- 
-    #while 1:
-        
-        #for event in pygame.event.get():
-            #if event.type == pygame.QUIT: 
-                #exit()
-                
-        #habitacion.update()
-        #habitacion.draw(screen)
-#        pygame.time.delay(10)
-    
-    
 
     
