@@ -1,7 +1,7 @@
 '''
 Created on 17/03/2013
 
-@author: Nikita Zdanovitch
+@author: Nikita Zdanovitch y El Buen Picu
 '''
 import os
 
