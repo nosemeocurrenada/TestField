@@ -16,9 +16,6 @@ class Entity():
     
     def draw(self, screen):
         screen.blit(self.image,self.rect)
-        
-    image = None
-    rect = None
     
     
 class Pelota(Entity):    
