@@ -17,6 +17,8 @@ class Entity():
     def draw(self, screen):
         screen.blit(self.image,self.rect)
     
+    def check_colision(self,other):
+    	return self.rect.colliderect(other.rect)
     
 class Pelota(Entity):    
     def __init__(self, image, pos, screenSize, speed):
@@ -105,8 +107,31 @@ class PersonaSumisa(Entity):
     def draw(self, screen):
         screen.blit(self.image,self.rect)
         
-        
-
+class Rebotador(Entity):
+	def __init__(self, image, pos, follow):
+		"""inicializa a la entidad con una imagen y una posision  - follow: Entity[]"""
+		Entity.__init__(self, image, pos)
+		self.follow = follow
+		self.i = 0
+		
+	def update(self):
+		movex = self.follow[self.i].rect.centerx - self.rect.centerx
+		movey = self.follow[self.i].rect.centery - self.rect.centery
+		if movex > 3:
+			movex = 3
+		if movex < -3:
+			movex = -3
+		if movey > 3:
+			movey = 3
+		if movey < -3:
+			movey = -3
+		self.rect = self.rect.move([movex,movey])
+	
+	def colisionated(self,other):
+		if other == self.follow[self.i]:
+			self.i = self.i + 1
+		if self.i >= len(self.follow):
+			self.i = 0
 
 
 class Room():
@@ -120,6 +145,13 @@ class Room():
         for entity in self.entitiesList:
             if hasattr(entity,"update"):
                 entity.update()
+		for entity1 in self.entitiesList:
+			for entity2 in self.entitiesList:
+				if entity1 != entity2 and hasattr(entity,"check_colision"):
+					if entity1.check_colision(entity2) and hasattr(entity1,"colisionated"):
+						entity1.colisionated(entity2)
+				
+			
             
     def draw(self, screen):
         screen.fill(( 0, 0, 0))
@@ -152,6 +184,12 @@ if __name__ == '__main__':
     habitacion.entitiesList.append(pepe)
     habitacion.entitiesList.append(juan)
     habitacion.entitiesList.append(carlos)
+    
+    otrapelota = Pelota(pygame.image.load("resources/images/ball2.png"), (90,90), size, [-1,1])
+    rebotador = Rebotador(pygame.image.load("resources/images/ball3.png"), (0,0), [pelota,otrapelota])
+	
+    habitacion.entitiesList.append(otrapelota)
+    habitacion.entitiesList.append(rebotador)
     
     while 1:
         
